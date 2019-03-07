@@ -1,7 +1,7 @@
 package com.rkovaliov.bu.advices;
 
 import com.rkovaliov.bu.exceptions.MemberNotExistsException;
-import com.rkovaliov.bu.services.impl.MemberServiceImpl;
+import com.rkovaliov.bu.services.MemberServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

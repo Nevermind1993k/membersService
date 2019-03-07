@@ -3,7 +3,7 @@ package com.rkovaliov.bu.controllers;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rkovaliov.bu.entities.Member;
 import com.rkovaliov.bu.exceptions.MemberNotExistsException;
-import com.rkovaliov.bu.services.MemberService;
+import com.rkovaliov.bu.services.interfaces.MemberService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -38,18 +38,17 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "Create new member", notes = "Creates new member")
+    @ApiOperation(value = "Create new member", notes = "Creates new member and returns his Id")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "firstName is required field"),
-            @ApiResponse(code = 200, message = "")})
+            @ApiResponse(code = 200, message = "1")})
     @PostMapping(value = CREATE_MEMBER_URL)
     public ResponseEntity<Object> createMember(@Valid @RequestBody MemberToSave memberToSave, BindingResult br) {
         // Handle binding errors
         if (br.hasErrors()) {
             return new ResponseEntity<>(br.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(", ")), HttpStatus.BAD_REQUEST);
         }
-        memberService.save(memberToSave);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(memberService.save(memberToSave), HttpStatus.OK);
     }
 
 
@@ -65,7 +64,7 @@ public class MemberController {
 
     @ApiOperation(value = "Get members", notes = "Allows to get all information about all members")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "[{'id':1,'firstName':'Vasia','lastName':'Sinichkin'','dateOfBirth':'09-09-1990','postalCode':'1234','image':{'type':0,'data':'/9j/4AAQ...'}},...]")})
+            @ApiResponse(code = 200, message = "[{'id':1,'firstName':'Vasia','lastName':'Pupkin'','dateOfBirth':'09-09-1990','postalCode':'1234','image':{'type':0,'data':'/9j/4AAQ...'}},...]")})
     @GetMapping(value = LIST_MEMBERS_URL)
     public ResponseEntity<Object> getAllMembers() {
         return new ResponseEntity<>(memberService.getAll(), HttpStatus.OK);

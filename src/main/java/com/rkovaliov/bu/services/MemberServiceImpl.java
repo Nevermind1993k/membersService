@@ -1,10 +1,10 @@
-package com.rkovaliov.bu.services.impl;
+package com.rkovaliov.bu.services;
 
 import com.rkovaliov.bu.controllers.MemberController;
 import com.rkovaliov.bu.entities.Member;
 import com.rkovaliov.bu.exceptions.MemberNotExistsException;
 import com.rkovaliov.bu.repositories.MemberRepository;
-import com.rkovaliov.bu.services.MemberService;
+import com.rkovaliov.bu.services.interfaces.MemberService;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.stereotype.Service;
@@ -12,18 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class MemberServiceImpl implements MemberService {
 
-    private static final AtomicLong counter = new AtomicLong();
-
     private final MemberRepository memberRepository;
+    private final SequenceGeneratorService sequenceGenerator;
 
-    public MemberServiceImpl(MemberRepository memberRepository) {
+    public MemberServiceImpl(MemberRepository memberRepository, SequenceGeneratorService sequenceGenerator) {
         this.memberRepository = memberRepository;
+        this.sequenceGenerator = sequenceGenerator;
     }
 
     @Override
@@ -43,8 +41,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void save(MemberController.MemberToSave member) {
-        memberRepository.save(new Member(nextValue(), member.getFirstName(), member.getLastName(), member.getDateOfBirth(), member.getPostalCode(), null));
+    public long save(MemberController.MemberToSave member) {
+        Member toSave = new Member(sequenceGenerator.generateSequence(Member.SEQUENCE_NAME), member.getFirstName(), member.getLastName(), member.getDateOfBirth(), member.getPostalCode(), null);
+        memberRepository.save(toSave);
+        return toSave.getId();
     }
 
     @Override
@@ -89,14 +89,6 @@ public class MemberServiceImpl implements MemberService {
         } else {
             throw new MemberNotExistsException(id);
         }
-    }
-
-    private static long nextValue() {
-        long toReturn = counter.getAndIncrement();
-        if (toReturn == 0) {
-            toReturn = counter.getAndIncrement();
-        }
-        return toReturn;
     }
 
 }
