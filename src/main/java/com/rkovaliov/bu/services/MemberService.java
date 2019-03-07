@@ -1,5 +1,6 @@
 package com.rkovaliov.bu.services;
 
+import com.rkovaliov.bu.controllers.MemberController;
 import com.rkovaliov.bu.entities.Member;
 import com.rkovaliov.bu.exceptions.MemberNotExistsException;
 
@@ -11,7 +12,7 @@ public interface MemberService {
 
     Member getById(long id) throws MemberNotExistsException;
 
-    void save(Member member);
+    void save(MemberController.MemberToSave member);
 
     void deleteById(long id) throws MemberNotExistsException;
 

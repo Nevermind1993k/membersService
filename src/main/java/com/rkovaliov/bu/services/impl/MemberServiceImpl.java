@@ -1,5 +1,6 @@
 package com.rkovaliov.bu.services.impl;
 
+import com.rkovaliov.bu.controllers.MemberController;
 import com.rkovaliov.bu.entities.Member;
 import com.rkovaliov.bu.exceptions.MemberNotExistsException;
 import com.rkovaliov.bu.repositories.MemberRepository;
@@ -42,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void save(Member member) {
+    public void save(MemberController.MemberToSave member) {
         memberRepository.save(new Member(nextValue(), member.getFirstName(), member.getLastName(), member.getDateOfBirth(), member.getPostalCode(), null));
     }
 
