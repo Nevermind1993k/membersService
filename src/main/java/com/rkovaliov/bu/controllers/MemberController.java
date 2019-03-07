@@ -107,7 +107,7 @@ public class MemberController {
     }
 
     //Test Controller to check if image save properly
-    @ApiOperation(value = "(TestController) Get image for member by id", notes = "(TestController) Allows to get image as image for member")
+    @ApiOperation(value = "(TestController) Get image for member by id", notes = "(TestController) Allows to get image as image for member just to check if it works")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "User with this id is not exists"),
             @ApiResponse(code = 200, message = "%some pretty image as jpeg%")})
