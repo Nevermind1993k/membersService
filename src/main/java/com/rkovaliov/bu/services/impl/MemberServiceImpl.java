@@ -12,11 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class MemberServiceImpl implements MemberService {
 
-    private static final AtomicInteger counter = new AtomicInteger();
+    private static final AtomicLong counter = new AtomicLong();
 
     private final MemberRepository memberRepository;
 
@@ -89,8 +90,8 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    private static int nextValue() {
-        int toReturn = counter.getAndIncrement();
+    private static long nextValue() {
+        long toReturn = counter.getAndIncrement();
         if (toReturn == 0) {
             toReturn = counter.getAndIncrement();
         }

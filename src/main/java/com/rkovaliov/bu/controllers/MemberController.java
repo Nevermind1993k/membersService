@@ -63,4 +63,12 @@ public class MemberController {
         memberService.saveImage(id, file);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    //Test Controller to check if image save properly
+    @GetMapping(value = "getImage",produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<Object> getImage() throws MemberNotExistsException {
+        Member byId = memberService.getById(1);
+        byte[] imageInBytes = byId.getImage().getData();
+        return new ResponseEntity<>(imageInBytes, HttpStatus.OK);
+    }
 }
