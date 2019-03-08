@@ -7,7 +7,9 @@ import com.rkovaliov.bu.services.interfaces.MemberService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -118,6 +120,8 @@ public class MemberController {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MemberToSave {
         @NotNull(message = "firstName is required field")
         private String firstName;
@@ -131,5 +135,6 @@ public class MemberController {
 
         @NotNull(message = "postalCode is required field")
         private String postalCode;
+
     }
 }

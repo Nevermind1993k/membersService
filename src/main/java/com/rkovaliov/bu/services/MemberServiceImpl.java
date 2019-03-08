@@ -53,7 +53,6 @@ public class MemberServiceImpl implements MemberService {
         Optional<Member> byId = memberRepository.findById(id);
         if (byId.isPresent()) {
             memberRepository.deleteById(id);
-            //todo delete image from hard disc
         } else {
             throw new MemberNotExistsException(id);
         }
