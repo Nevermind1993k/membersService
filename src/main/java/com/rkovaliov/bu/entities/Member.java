@@ -17,7 +17,7 @@ import java.util.Date;
 public class Member {
 
     @Transient
-    public static final String SEQUENCE_NAME = "users_sequence";
+    public static final String SEQUENCE_NAME = "members_sequence";
 
     @Id
     private long id;

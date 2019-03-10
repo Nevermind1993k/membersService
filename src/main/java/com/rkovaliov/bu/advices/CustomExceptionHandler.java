@@ -22,8 +22,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(MemberNotExistsException.class)
-    public ResponseEntity<Object> handleUserNotExistsException(final Exception e) {
-        LOG.error("Trying to get user with id: " + e.getMessage());
-        return new ResponseEntity<>("User with this id is not exists", HttpStatus.NOT_FOUND);
+    public ResponseEntity<Object> handleMemberNotExistsException(final Exception e) {
+        LOG.error("Trying to get member with id: " + e.getMessage());
+        return new ResponseEntity<>("Member with this id is not exists", HttpStatus.NOT_FOUND);
     }
 }

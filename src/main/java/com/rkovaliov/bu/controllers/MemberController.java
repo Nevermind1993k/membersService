@@ -56,7 +56,7 @@ public class MemberController {
 
     @ApiOperation(value = "Get member by id", notes = "Allows to get all information about member")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "User with this id is not exists"),
+            @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 200, message = "{'id':1,'firstName':'Vasia','lastName':'Sinichkin'','dateOfBirth':'09-09-1990','postalCode':'1234','image':{'type':0,'data':'/9j/4AAQ...'}}")})
     @GetMapping(value = READ_MEMBER_URL)
     public ResponseEntity<Object> getMemberById(@RequestParam("id") long id) throws MemberNotExistsException {
@@ -75,7 +75,7 @@ public class MemberController {
 
     @ApiOperation(value = "Update member by id", notes = "Updates information about member")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "User with this id is not exists"),
+            @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 200, message = "")})
     @PutMapping(value = UPDATE_MEMBER_URL)
     public ResponseEntity<Object> updateMemberById(@RequestParam("id") long id, @RequestBody Member updatedMember) throws MemberNotExistsException {
@@ -85,7 +85,7 @@ public class MemberController {
 
     @ApiOperation(value = "Delete member by id", notes = "Deletes member")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "User with this id is not exists"),
+            @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 200, message = "")})
     @DeleteMapping(value = DELETE_MEMBER_URL)
     public ResponseEntity<Object> deleteMemberById(@RequestParam("id") long id) throws MemberNotExistsException {
@@ -95,7 +95,7 @@ public class MemberController {
 
     @ApiOperation(value = "Save image to member by id", notes = "Allows save image to member")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "User with this id is not exists"),
+            @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 400, message = "Upload File Is Empty or too big"),
             @ApiResponse(code = 200, message = "")})
     @PutMapping(value = SAVE_IMAGE_URL)
@@ -110,7 +110,7 @@ public class MemberController {
     //Test Controller to check if image save properly
     @ApiOperation(value = "(TestController) Get image for member by id", notes = "(TestController) Allows to get image as image for member just to check if it works")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "User with this id is not exists"),
+            @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 200, message = "%some pretty image as jpeg%")})
     @GetMapping(value = "getImage", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<Object> getImage(@RequestParam("id") long id) throws MemberNotExistsException {
