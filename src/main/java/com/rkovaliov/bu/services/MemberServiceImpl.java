@@ -60,7 +60,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void updateById(long id, Member updatedMember) throws MemberNotExistsException {
+    public void updateById(long id, MemberController.MemberToSave updatedMember) throws MemberNotExistsException {
         Optional<Member> byId = memberRepository.findById(id);
         if (byId.isPresent()) {
             Member memberById = byId.get();
@@ -90,4 +90,15 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    @Override
+    public void deleteImageById(long id) throws MemberNotExistsException {
+        Optional<Member> byId = memberRepository.findById(id);
+        if (byId.isPresent()) {
+            Member memberById = byId.get();
+            memberById.setImage(null);
+            memberRepository.save(memberById);
+        } else {
+            throw new MemberNotExistsException(id);
+        }
+    }
 }

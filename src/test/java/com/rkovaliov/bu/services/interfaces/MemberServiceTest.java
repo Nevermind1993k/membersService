@@ -88,10 +88,9 @@ public class MemberServiceTest {
 
     @Test(expected = MemberNotExistsException.class)
     public void updateByIdWithWrongIdTest() throws MemberNotExistsException {
-        Member mockedMember = getMockedMember();
-        doThrow(new MemberNotExistsException(mockedMember.getId())).when(memberService).updateById(anyLong(), any(Member.class));
-
-        mockedMember.setFirstName("someName");
-        memberService.updateById(mockedMember.getId(), mockedMember);
+        long memberId = 25;
+        MemberController.MemberToSave memberToUpdate = new MemberController.MemberToSave("updatedName", "updatedLastName", new Date(), "4321");
+        doThrow(new MemberNotExistsException(memberId)).when(memberService).updateById(memberId, memberToUpdate);
+        memberService.updateById(memberId, memberToUpdate);
     }
 }

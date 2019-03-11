@@ -16,8 +16,9 @@ public interface MemberService {
 
     void deleteById(long id) throws MemberNotExistsException;
 
-    void updateById(long id, Member updatedMember) throws MemberNotExistsException;
+    void updateById(long id, MemberController.MemberToSave updatedMember) throws MemberNotExistsException;
 
     void saveImage(long id, byte[] file) throws MemberNotExistsException;
 
+    void deleteImageById(long id) throws MemberNotExistsException;
 }

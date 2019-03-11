@@ -32,6 +32,7 @@ public class MemberController {
     private static final String UPDATE_MEMBER_URL = "/update";
     private static final String DELETE_MEMBER_URL = "/delete";
     private static final String SAVE_IMAGE_URL = "/saveImage";
+    private static final String DELETE_IMAGE_URL = "/deleteImage";
 
     private final MemberService memberService;
 
@@ -78,7 +79,7 @@ public class MemberController {
             @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 200, message = "")})
     @PutMapping(value = UPDATE_MEMBER_URL)
-    public ResponseEntity<Object> updateMemberById(@RequestParam("id") long id, @RequestBody Member updatedMember) throws MemberNotExistsException {
+    public ResponseEntity<Object> updateMemberById(@RequestParam("id") long id, @RequestBody MemberToSave updatedMember) throws MemberNotExistsException {
         memberService.updateById(id, updatedMember);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -93,7 +94,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Save image to member by id", notes = "Allows save image to member")
+    @ApiOperation(value = "Save image to member by id", notes = "Allows to save image to member")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 400, message = "Upload File Is Empty or too big"),
@@ -104,6 +105,16 @@ public class MemberController {
             return new ResponseEntity<>("Upload File Is Empty or too big", HttpStatus.BAD_REQUEST);
         }
         memberService.saveImage(id, file);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = DELETE_IMAGE_URL)
+    @ApiOperation(value = "Delete image to member by id", notes = "Allows to delete image to member")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Member with this id is not exists"),
+            @ApiResponse(code = 200, message = "")})
+    public ResponseEntity<Object> deleteImageToMember(@RequestParam("id") long id) throws MemberNotExistsException {
+        memberService.deleteImageById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
