@@ -38,11 +38,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        String username = "root";
         String password = "root";
         String encryptedPassword = this.passwordEncoder().encode(password);
 
         InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> mngConfig = auth.inMemoryAuthentication();
-        UserDetails u1 = User.withUsername("root").password(encryptedPassword).roles("USER").build();
+        UserDetails u1 = User.withUsername(username).password(encryptedPassword).roles("USER").build();
 
         mngConfig.withUser(u1);
     }
