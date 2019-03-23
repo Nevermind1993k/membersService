@@ -1,12 +1,13 @@
-package com.rkovaliov.bu.services;
+package com.rkovaliov.bu.services.impl;
 
 import com.rkovaliov.bu.controllers.MemberController;
 import com.rkovaliov.bu.entities.Member;
 import com.rkovaliov.bu.exceptions.MemberNotExistsException;
 import com.rkovaliov.bu.repositories.MemberRepository;
-import com.rkovaliov.bu.services.interfaces.MemberService;
+import com.rkovaliov.bu.services.MemberService;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,9 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final SequenceGeneratorService sequenceGenerator;
 
-    public MemberServiceImpl(MemberRepository memberRepository, SequenceGeneratorService sequenceGenerator) {
+    public MemberServiceImpl(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.sequenceGenerator = sequenceGenerator;
     }
 
     @Override
@@ -30,38 +29,33 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member getById(long id) throws MemberNotExistsException {
-        Optional<Member> byId = memberRepository.findById(id);
+    public Member getById(ObjectId id) throws MemberNotExistsException {
+        Optional<Member> byId = memberRepository.findBy_id(id);
         if (byId.isPresent()) {
             return byId.get();
         } else {
-            throw new MemberNotExistsException(id);
+            throw new MemberNotExistsException(id.toHexString());
         }
     }
 
     @Override
     @Transactional
-    public long save(MemberController.MemberToSave member) {
-        Member toSave = new Member(sequenceGenerator.generateSequence(Member.SEQUENCE_NAME), member.getFirstName(), member.getLastName(), member.getDateOfBirth(), member.getPostalCode(), null);
+    public String save(MemberController.MemberToSave member) {
+        Member toSave = new Member(member.getFirstName(), member.getLastName(), member.getDateOfBirth(), member.getPostalCode());
         memberRepository.save(toSave);
-        return toSave.getId();
+        return toSave.get_id();
     }
 
     @Override
     @Transactional
-    public void deleteById(long id) throws MemberNotExistsException {
-        Optional<Member> byId = memberRepository.findById(id);
-        if (byId.isPresent()) {
-            memberRepository.deleteById(id);
-        } else {
-            throw new MemberNotExistsException(id);
-        }
+    public void deleteById(ObjectId id) {
+        memberRepository.deleteById(id.toHexString());
     }
 
     @Override
     @Transactional
-    public void updateById(long id, MemberController.MemberToSave updatedMember) throws MemberNotExistsException {
-        Optional<Member> byId = memberRepository.findById(id);
+    public void updateById(ObjectId id, MemberController.MemberToSave updatedMember) throws MemberNotExistsException {
+        Optional<Member> byId = memberRepository.findBy_id(id);
         if (byId.isPresent()) {
             Member memberById = byId.get();
             memberById.setFirstName(updatedMember.getFirstName());
@@ -70,14 +64,14 @@ public class MemberServiceImpl implements MemberService {
             memberById.setPostalCode(updatedMember.getPostalCode());
             memberRepository.save(memberById);
         } else {
-            throw new MemberNotExistsException(id);
+            throw new MemberNotExistsException(id.toHexString());
         }
     }
 
     @Override
     @Transactional
-    public void saveImage(long id, byte[] file) throws MemberNotExistsException {
-        Optional<Member> byId = memberRepository.findById(id);
+    public void saveImage(ObjectId id, byte[] file) throws MemberNotExistsException {
+        Optional<Member> byId = memberRepository.findBy_id(id);
         if (byId.isPresent()) {
             Member memberById = byId.get();
             if (memberById.getImage() != null) {
@@ -86,19 +80,19 @@ public class MemberServiceImpl implements MemberService {
             memberById.setImage(new Binary(BsonBinarySubType.BINARY, file));
             memberRepository.save(memberById);
         } else {
-            throw new MemberNotExistsException(id);
+            throw new MemberNotExistsException(id.toHexString());
         }
     }
 
     @Override
-    public void deleteImageById(long id) throws MemberNotExistsException {
-        Optional<Member> byId = memberRepository.findById(id);
+    public void deleteImageById(ObjectId id) throws MemberNotExistsException {
+        Optional<Member> byId = memberRepository.findBy_id(id);
         if (byId.isPresent()) {
             Member memberById = byId.get();
             memberById.setImage(null);
             memberRepository.save(memberById);
         } else {
-            throw new MemberNotExistsException(id);
+            throw new MemberNotExistsException(id.toHexString());
         }
     }
 }

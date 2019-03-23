@@ -17,6 +17,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "root";
+
     private final AuthenticationEntryPoint authEntryPoint;
 
     @Autowired
@@ -38,12 +41,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        String username = "root";
-        String password = "root";
-        String encryptedPassword = this.passwordEncoder().encode(password);
+        String encryptedPassword = this.passwordEncoder().encode(PASSWORD);
 
         InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> mngConfig = auth.inMemoryAuthentication();
-        UserDetails u1 = User.withUsername(username).password(encryptedPassword).roles("USER").build();
+        UserDetails u1 = User.withUsername(USERNAME).password(encryptedPassword).roles("USER").build();
 
         mngConfig.withUser(u1);
     }

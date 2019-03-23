@@ -1,6 +1,6 @@
 //package com.rkovaliov.bu.configs;
 //
-//import com.rkovaliov.bu.services.interfaces.MemberService;
+//import com.rkovaliov.bu.services.MemberService;
 //import org.mockito.Mockito;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;

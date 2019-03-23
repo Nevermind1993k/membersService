@@ -3,13 +3,14 @@ package com.rkovaliov.bu.controllers;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rkovaliov.bu.entities.Member;
 import com.rkovaliov.bu.exceptions.MemberNotExistsException;
-import com.rkovaliov.bu.services.interfaces.MemberService;
+import com.rkovaliov.bu.services.MemberService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,12 +24,12 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+@RequestMapping(value = "/members", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 public class MemberController {
 
     private static final String CREATE_MEMBER_URL = "/create";
-    private static final String READ_MEMBER_URL = "/read";
-    private static final String LIST_MEMBERS_URL = "/readAll";
+    private static final String READ_MEMBER_URL = "/get";
+    private static final String LIST_MEMBERS_URL = "/getAll";
     private static final String UPDATE_MEMBER_URL = "/update";
     private static final String DELETE_MEMBER_URL = "/delete";
     private static final String SAVE_IMAGE_URL = "/saveImage";
@@ -44,7 +45,7 @@ public class MemberController {
     @ApiOperation(value = "Create new member", notes = "Creates new member and returns his Id")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "firstName is required field"),
-            @ApiResponse(code = 200, message = "1")})
+            @ApiResponse(code = 200, message = "5c9689da978e3f018ced2c84")})
     @PostMapping(value = CREATE_MEMBER_URL)
     public ResponseEntity<Object> createMember(@Valid @RequestBody MemberToSave memberToSave, BindingResult br) {
         // Handle binding errors
@@ -58,16 +59,16 @@ public class MemberController {
     @ApiOperation(value = "Get member by id", notes = "Allows to get all information about member")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Member with this id is not exists"),
-            @ApiResponse(code = 200, message = "{'id':1,'firstName':'Vasia','lastName':'Sinichkin'','dateOfBirth':'09-09-1990','postalCode':'1234','image':{'type':0,'data':'/9j/4AAQ...'}}")})
+            @ApiResponse(code = 200, message = "{'_id':5c9689da978e3f018ced2c84,'firstName':'Vasia','lastName':'Sinichkin'','dateOfBirth':'09-09-1990','postalCode':'1234','image':{'type':0,'data':'/9j/4AAQ...'}}")})
     @GetMapping(value = READ_MEMBER_URL)
-    public ResponseEntity<Object> getMemberById(@RequestParam("id") long id) throws MemberNotExistsException {
+    public ResponseEntity<Object> getMemberById(@RequestParam("id") ObjectId id) throws MemberNotExistsException {
         return new ResponseEntity<>(memberService.getById(id), HttpStatus.OK);
     }
 
 
     @ApiOperation(value = "Get members", notes = "Allows to get all information about all members")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "[{'id':1,'firstName':'Vasia','lastName':'Pupkin'','dateOfBirth':'09-09-1990','postalCode':'1234','image':{'type':0,'data':'/9j/4AAQ...'}},...]")})
+            @ApiResponse(code = 200, message = "[{'_id':5c9689da978e3f018ced2c84,'firstName':'Vasia','lastName':'Pupkin'','dateOfBirth':'09-09-1990','postalCode':'1234','image':{'type':0,'data':'/9j/4AAQ...'}},...]")})
     @GetMapping(value = LIST_MEMBERS_URL)
     public ResponseEntity<Object> getAllMembers() {
         return new ResponseEntity<>(memberService.getAll(), HttpStatus.OK);
@@ -79,17 +80,16 @@ public class MemberController {
             @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 200, message = "")})
     @PutMapping(value = UPDATE_MEMBER_URL)
-    public ResponseEntity<Object> updateMemberById(@RequestParam("id") long id, @RequestBody MemberToSave updatedMember) throws MemberNotExistsException {
+    public ResponseEntity<Object> updateMemberById(@RequestParam("id") ObjectId id, @RequestBody MemberToSave updatedMember) throws MemberNotExistsException {
         memberService.updateById(id, updatedMember);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "Delete member by id", notes = "Deletes member")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 200, message = "")})
     @DeleteMapping(value = DELETE_MEMBER_URL)
-    public ResponseEntity<Object> deleteMemberById(@RequestParam("id") long id) throws MemberNotExistsException {
+    public ResponseEntity<Object> deleteMemberById(@RequestParam("id") ObjectId id) {
         memberService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -100,7 +100,7 @@ public class MemberController {
             @ApiResponse(code = 400, message = "Upload File Is Empty or too big"),
             @ApiResponse(code = 200, message = "")})
     @PutMapping(value = SAVE_IMAGE_URL)
-    public ResponseEntity<Object> saveImageToMember(@RequestParam("id") long id, @RequestBody byte[] file) throws MemberNotExistsException {
+    public ResponseEntity<Object> saveImageToMember(@RequestParam("id") ObjectId id, @RequestBody byte[] file) throws MemberNotExistsException {
         if (file == null || file.length == 0 || file.length > 5000000) {
             return new ResponseEntity<>("Upload File Is Empty or too big", HttpStatus.BAD_REQUEST);
         }
@@ -113,7 +113,7 @@ public class MemberController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 200, message = "")})
-    public ResponseEntity<Object> deleteImageToMember(@RequestParam("id") long id) throws MemberNotExistsException {
+    public ResponseEntity<Object> deleteImageToMember(@RequestParam("id") ObjectId id) throws MemberNotExistsException {
         memberService.deleteImageById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -124,7 +124,7 @@ public class MemberController {
             @ApiResponse(code = 404, message = "Member with this id is not exists"),
             @ApiResponse(code = 200, message = "%some pretty image as jpeg%")})
     @GetMapping(value = "getImage", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<Object> getImage(@RequestParam("id") long id) throws MemberNotExistsException {
+    public ResponseEntity<Object> getImage(@RequestParam("id") ObjectId id) throws MemberNotExistsException {
         Member byId = memberService.getById(id);
         byte[] imageInBytes = byId.getImage().getData();
         return new ResponseEntity<>(imageInBytes, HttpStatus.OK);
